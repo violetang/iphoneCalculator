@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<head>
+    <style>
+    .container{
+        display:grid;
+        justify-content: center;
+        grid-template-columns: 80px 80px 80px 80px;
+        grid-template-rows: 80px 80px 80px 80px 80px 80px;;
+        grid-template-areas: 
+        "text text text text"
+        "num num num num"
+        "num num num num"
+        "num num num num"
+        "num num num num"
+        "num num num num"
+    }
+
+    .text{
+        grid-area: text;
+        grid-row-start: 1;
+        grid-row-end: 1;
+        background-color: black;
+        color: white;
+        text-align: right;
+    }
+
+    .num{
+        background-color: dimgray;
+        border: none;
+        color: white;
+        font-size: 30px;
+        padding: 20px;
+        text-align: center;
+        margin: 4px 4px;
+        border-radius: 50%;
+    }
+
+    .num:focus{
+        outline:0;
+    }
+
+    .num:active{
+        background-color: darkgray;
+    }
+
+    .num:hover{
+        cursor:default;
+    }
+
+    .itemZero{
+        grid-column: 1 / span 2;
+        border-radius: 40px;
+        text-align: left;
+    }
+
+    .silver{
+        background-color: silver;
+        color: black;
+    }
+
+    .orange{
+        background-color: orange;
+    }
+
+    botton{
+        font-size:64px;
+    }
+    </style>
+</head>
+<body style="background-color:black; font-size:64px;">
+        <div class="container">
+            <div class="item text" id="display" value="0">0</div>
+    
+            <button class="num silver" onclick="clearFnc()">AC</button>
+            <button class="num silver" onclick="changeSign()" value="+/-">+/-</button>
+            <button class="num silver" onclick="operator('%')" value="%">%</button>
+            <button class="num orange" onclick="operator('/')" value="/">÷</button>
+    
+            <button class="num" value="7" onclick="clickNum(7)">7</button>
+            <button class="num" value="8" onclick="clickNum(8)">8</button>
+            <button class="num" value="9" onclick="clickNum(9)">9</button>
+            <button class="num orange" onclick="operator('*')" value="*">x</button>
+    
+            <button class="num" value="4" onclick="clickNum(4)">4</button>
+            <button class="num" value="5" onclick="clickNum(5)">5</button>
+            <button class="num" value="6" onclick="clickNum(6)">6</button>
+            <button class="num orange" onclick="operator('-')" value="-">-</button>
+    
+            <button class="num" value="1" onclick="clickNum(1)">1</button>
+            <button class="num" value="2" onclick="clickNum(2)">2</button>
+            <button class="num" value="3" onclick="clickNum(3)">3</button>
+            <button class="num orange" onclick="operator('+')" value="+">+</button>
+    
+            <button class="num itemZero" onclick="clickNum(0)" value="0">0</button>
+            <button class="num" value=".">.</button>
+            <button class="num orange" onclick="calculate()" value="=">=</button>
+        </div>
+
+<script>
+var currentNum = 0;
+var previousSum = 0;
+var oper;
+var signOfNum = true;
+
+function clearFnc(){
+    signOfNum = true; //positive
+    previousSum = 0;
+    currentNum = 0;
+    oper = "";
+    document.getElementById("display").innerHTML = previousSum;
+}
+
+function clickNum(numPressed){
+    if(document.getElementById("display").innerHTML == 0){
+  	    currentNum = numPressed; 
+    }else{
+        currentNum = (currentNum == 0) ? numPressed.toString() : currentNum + numPressed.toString();
+    }
+    currentNum = (signOfNum == true)? currentNum: (-1)*currentNum;
+    document.getElementById("display").innerHTML = currentNum;
+}
+
+function calculate(){
+	currentNum = parseInt(currentNum); 
+    if(oper==="+"){
+  	    previousSum += currentNum;
+    }
+    else if(oper==="-"){
+  	    previousSum -= currentNum;
+    } 
+    else if(oper==="*"){
+  	    previousSum *= currentNum;
+    }
+    else if(oper==="/"){
+    	previousSum /= currentNum;
+    }
+    else if(oper==="%"){
+  	    previousSum %= currentNum;
+    } 
+    else if(oper ===""){
+        previousSum = (previousSum != 0)? previousSum : currentNum;
+    }
+    var result = previousSum;
+    document.getElementById("display").innerHTML = result;
+    signOfNum = true;
+    currentNum = 0;
+    oper = "";
+}
+
+function changeSign(){
+    signOfNum = (signOfNum = true)? false: true;
+    if(currentNum != 0){
+        currentNum = (-1)*currentNum;
+        document.getElementById("display").innerHTML = currentNum;
+    }else {
+        if(oper ==="" && previousSum != 0){
+            previousSum = (-1)*previousSum;
+            document.getElementById("display").innerHTML = previousSum;
+        }else{
+            currentNum = 0;
+            document.getElementById("display").innerHTML = "-0";
+        }       
+    }
+}
+
+function operator(op){
+	setOpera(op);
+    signOfNum = true;
+    if(previousSum == 0)
+    {
+  	    previousSum = parseInt(currentNum);
+    }
+    currentNum = 0;     
+}
+
+function setOpera(op){
+	if(op==="+"){
+  	    oper = "+";
+    }
+    else if(op==="-"){
+    	oper = "-";
+    }
+    else if(op==="*"){
+    	oper = "*";
+    }
+    else if(op==="/"){
+  	    oper = "/";
+    }
+    else if(op==="%"){
+  	    oper = "%";
+    }
+}
+</script>
+</body>
